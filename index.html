@@ -310,6 +310,11 @@
   .myth-back { transform:rotateY(180deg); background:radial-gradient(130% 90% at 50% 0%, rgba(0,70,160,.5) 0%, rgba(8,12,22,.85) 60%); }
   .myth-back .verdict { font-family:var(--serif); font-style:italic; font-size:48px; color:var(--accent); line-height:1; }
   .myth-back .exp { color:#aeb8c8; font-size:15px; font-weight:300; margin-top:16px; max-width:230px; line-height:1.5; }
+  .myth-tile.is-myth .myth-back { background:radial-gradient(130% 90% at 50% 0%, rgba(214,46,56,.62) 0%, rgba(34,7,9,.94) 62%); border-color:rgba(255,95,95,.45); }
+  .myth-tile.is-fact .myth-back { background:radial-gradient(130% 90% at 50% 0%, rgba(28,176,96,.62) 0%, rgba(6,30,17,.94) 62%); border-color:rgba(70,222,142,.45); }
+  .myth-tile.is-myth .verdict { color:#ffdada; }
+  .myth-tile.is-fact .verdict { color:#d3ffe4; }
+  .myth-tile.is-myth .exp, .myth-tile.is-fact .exp { color:rgba(255,255,255,.85); }
   .myth-hint { margin-top:30px; font-size:13px; letter-spacing:.02em; color:var(--muted-2); }
 
   /* ---------------- Archives ---------------- */
@@ -744,6 +749,12 @@
   }
   addEventListener('scroll', updateNav);
   updateNav();
+
+  // Colour Myth/Fact card backs: red for Myth, green for Fact
+  document.querySelectorAll('.myth-tile').forEach(function(t){
+    var v = (t.querySelector('.verdict') || {}).textContent || '';
+    t.classList.add(/fact/i.test(v) ? 'is-fact' : 'is-myth');
+  });
 
   /* ---- Intro scroll sequence ---- */
   const intro = document.getElementById('intro');
