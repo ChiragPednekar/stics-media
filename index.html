@@ -259,6 +259,17 @@
   @media (max-width:860px){ .steps{ grid-template-columns:1fr 1fr; } .steps::before{ display:none; } }
   @media (max-width:520px){ .steps{ grid-template-columns:1fr; } }
 
+  /* ---------------- Brand marquee ---------------- */
+  .brand-strip { padding: 42px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .brand-track { display:flex; align-items:center; width:max-content; animation: brandScroll 48s linear infinite; will-change:transform; }
+  .brand-strip:hover .brand-track { animation-play-state: paused; }
+  .brand-item { font-family:var(--sans); font-weight:600; font-size:clamp(18px,2.2vw,24px); color:#93a0b5; white-space:nowrap; letter-spacing:-.01em; transition:color .3s; }
+  .brand-item:hover { color:#fff; }
+  .brand-sep { color:var(--accent); font-size:12px; margin:0 34px; opacity:.75; }
+  @keyframes brandScroll { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
   /* ---------------- Split feature ---------------- */
   .split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
   @media (max-width: 900px) { .split { grid-template-columns: 1fr; gap: 40px; } }
@@ -430,6 +441,11 @@
       </p>
       <div class="scroll-hint" id="scrollHint">Scroll<span class="m"></span></div>
     </div>
+  </section>
+
+  <!-- ===== BRAND MARQUEE ===== -->
+  <section class="brand-strip" aria-label="Brands">
+    <div class="brand-track" id="brandTrack"></div>
   </section>
 
   <!-- ===== ABOUT STICS MEDIA ===== -->
@@ -760,6 +776,15 @@
     var v = (t.querySelector('.verdict') || {}).textContent || '';
     t.classList.add(/fact/i.test(v) ? 'is-fact' : 'is-myth');
   });
+
+  // Brand name marquee (sliding, seamless loop)
+  (function(){
+    var brands=['Higgsfield','Abacus AI','Lovable','Replit','Emergent','Rocket IO','ImagineArt','CapCut','Serif AI','Brickit','Artisan','Claid AI','Stake','Vertus','ONLYOFFICE','DelhiAI Tech','Brianco','JobCopilot'];
+    var track=document.getElementById('brandTrack');
+    if(!track) return;
+    var group = brands.map(function(b){return '<span class="brand-item">'+b+'</span>';}).join('<span class="brand-sep">✦</span>') + '<span class="brand-sep">✦</span>';
+    track.innerHTML = group + group;
+  })();
 
   /* ---- Intro scroll sequence ---- */
   const intro = document.getElementById('intro');
