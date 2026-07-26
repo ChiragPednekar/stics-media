@@ -567,35 +567,35 @@
           <p style="margin-top:24px; font-size:12px; color:var(--muted-2);">Prefer to write first? Use the form and we'll reply within one business day.</p>
         </div>
         <div class="contact-right">
-          <form class="contact-form">
+          <form class="contact-form" id="contactForm">
             <div class="form-row">
               <div class="form-group">
                 <label>NAME *</label>
-                <input type="text" />
+                <input type="text" name="name" required />
               </div>
               <div class="form-group">
                 <label>WORK EMAIL *</label>
-                <input type="email" />
+                <input type="email" name="email" required />
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label>COMPANY</label>
-                <input type="text" />
+                <input type="text" name="company" />
               </div>
               <div class="form-group">
                 <label>WEBSITE</label>
-                <input type="text" placeholder="https://" />
+                <input type="text" name="website" placeholder="https://" />
               </div>
             </div>
             <div class="form-group">
               <label>MARKETING GOAL</label>
-              <input type="text" placeholder="e.g. Launch our new agent, drive signups" />
+              <input type="text" name="goal" placeholder="e.g. Launch our new agent, drive signups" />
             </div>
             <div class="form-group">
               <label>APPROXIMATE BUDGET</label>
-              <select>
-                <option>Select a range</option>
+              <select name="budget">
+                <option value="">Select a range</option>
                 <option>$5k - $10k</option>
                 <option>$10k - $25k</option>
                 <option>$25k+</option>
@@ -603,9 +603,10 @@
             </div>
             <div class="form-group">
               <label>MESSAGE</label>
-              <textarea placeholder="Tell us what you're building..." rows="4"></textarea>
+              <textarea name="message" placeholder="Tell us what you're building..." rows="4"></textarea>
             </div>
             <button type="submit" class="btn blue" style="width:100%; border-radius:999px; font-size:14px; font-weight:600; padding:16px; margin-top:8px;">Book a Strategy Call &rarr;</button>
+            <p class="form-status" id="formStatus" style="margin-top:14px; font-size:13px; color:var(--muted); display:none;"></p>
           </form>
         </div>
       </div>
@@ -779,6 +780,29 @@
       dots.forEach(d => d.addEventListener('click', ()=>{ stop(); idx = +d.dataset.i; render(true); start(); }));
       start();
     }
+  })();
+
+  /* ---- Enquiry form -> Google Sheet ---- */
+  // Paste your Google Apps Script Web App URL between the quotes (see GOOGLE-SHEET-SETUP.md).
+  const SHEET_ENDPOINT = '';
+  (function(){
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+    const btn = form.querySelector('button[type="submit"]');
+    const status = document.getElementById('formStatus');
+    function say(msg, color){ if(status){ status.style.display='block'; status.style.color=color||'var(--muted)'; status.textContent=msg; } }
+    form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      const data = new FormData(form);
+      if (!data.get('name') || !data.get('email')) { say('Please add your name and work email.', '#ff6b6b'); return; }
+      if (!SHEET_ENDPOINT) { say('Form not connected yet — add your Google Sheet URL in index.html (see GOOGLE-SHEET-SETUP.md).', '#ffb454'); return; }
+      const original = btn.innerHTML;
+      btn.disabled = true; btn.innerHTML = 'Sending…'; say('');
+      fetch(SHEET_ENDPOINT, { method:'POST', mode:'no-cors', body:new URLSearchParams(data) })
+        .then(function(){ btn.innerHTML = 'Thanks — we’ll be in touch ✓'; form.reset(); say('Your enquiry was sent. We’ll reply within one business day.', '#0099ff'); })
+        .catch(function(){ btn.disabled=false; btn.innerHTML=original; say('Something went wrong. Please try again or email us directly.', '#ff6b6b'); })
+        .finally(function(){ setTimeout(function(){ btn.disabled=false; btn.innerHTML=original; }, 5000); });
+    });
   })();
 </script>
 </body>
