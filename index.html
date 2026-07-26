@@ -177,11 +177,12 @@
     margin-top: 56px; padding: 32px 40px; background: rgba(15,26,48,0.45); border: 1px solid var(--line);
     border-radius: 34px; box-shadow: 0 0 70px rgba(0,111,255,0.22); }
   @media (max-width: 520px) { .platform-icons { gap: 14px; padding: 22px 24px; } }
-  .pf-icon { width: 74px; height: 74px; border-radius: 20px; display: flex; align-items: center; justify-content: center;
+  .pf-icon { width: 74px; height: 74px; border-radius: 20px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
     box-shadow: 0 12px 26px rgba(0,0,0,0.5); transition: transform .3s cubic-bezier(.16,1,.3,1); }
   @media (max-width: 520px) { .pf-icon { width: 56px; height: 56px; border-radius: 15px; } }
   .pf-icon:hover { transform: translateY(-7px); }
   .pf-icon svg { width: 42px; height: 42px; }
+  .pf-icon .pf-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
   @media (max-width: 520px) { .pf-icon svg { width: 32px; height: 32px; } }
   .pf-icon.ig { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5 100%); }
   .pf-icon.li { background: #0a66c2; }
@@ -406,7 +407,7 @@
       </svg>
     </a>
     <div class="nav-right">
-      <a class="btn blue" href="#" style="border-radius:999px; font-weight:600; padding:10px 22px; font-size:13px;">Book a Strategy Call &rarr;</a>
+      <a class="btn blue" href="#contact" style="border-radius:999px; font-weight:600; padding:10px 22px; font-size:13px;">Book a Strategy Call &rarr;</a>
     </div>
   </div>
 </header>
@@ -445,10 +446,10 @@
       <div class="about-right">
         <div class="stats-label reveal">By the Numbers</div>
         <div class="stats-grid">
-          <div class="stat-card reveal d1"><div class="sc-num">800+</div><div class="sc-cap">AI Creators</div></div>
-          <div class="stat-card reveal d1"><div class="sc-num">4</div><div class="sc-cap">Core Platforms</div></div>
-          <div class="stat-card reveal d2"><div class="sc-num">5</div><div class="sc-cap">Core Services</div></div>
-          <div class="stat-card reveal d2"><div class="sc-num">AI</div><div class="sc-cap">Exclusive Focus</div></div>
+          <div class="stat-card reveal d1"><div class="sc-num">2M+</div><div class="sc-cap">Owned Network Followers</div></div>
+          <div class="stat-card reveal d1"><div class="sc-num">100M+</div><div class="sc-cap">Extended Network Followers</div></div>
+          <div class="stat-card reveal d2"><div class="sc-num">800+</div><div class="sc-cap">Creators in Network</div></div>
+          <div class="stat-card reveal d2"><div class="sc-num">1B+</div><div class="sc-cap">Monthly Impressions</div></div>
         </div>
         <div class="foot-label reveal">Global Footprints</div>
         <div class="flag-marquee reveal d1">
@@ -488,15 +489,19 @@
       <h2 class="display reveal d1">We drive Growth <span class="it">across Platforms</span></h2>
       <div class="platform-icons reveal d2">
         <span class="pf-icon ig" title="Instagram">
+          <img class="pf-img" src="assets/social-instagram.png" alt="Instagram" onerror="this.remove()">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="#fff" stroke="none"/></svg>
         </span>
         <span class="pf-icon li" title="LinkedIn">
+          <img class="pf-img" src="assets/social-linkedin.png" alt="LinkedIn" onerror="this.remove()">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.75 2.64 4.75 6.08V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9z"/></svg>
         </span>
         <span class="pf-icon yt" title="YouTube">
+          <img class="pf-img" src="assets/social-youtube.png" alt="YouTube" onerror="this.remove()">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M9.5 8.2l6.5 3.8-6.5 3.8z"/></svg>
         </span>
         <span class="pf-icon x" title="X">
+          <img class="pf-img" src="assets/social-x.png" alt="X" onerror="this.remove()">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.9 2H22l-7.5 8.6L23 22h-6.8l-5-6.5L5.4 22H2.3l8-9.2L1.5 2h7l4.5 6zM16.8 20h1.7L7.3 3.8H5.5z"/></svg>
         </span>
       </div>
@@ -507,7 +512,7 @@
   <section class="block navy" id="network">
     <div class="wrap" style="text-align:center">
       <div class="eyebrow reveal" style="justify-content:center">Our AI Network</div>
-      <h2 class="display reveal d1">Accounts we scale<br><span class="it">end to end using AI</span></h2>
+      <h2 class="display reveal d1">Accounts we scale<br><span class="it">end to end</span></h2>
       <div class="ig-wrap reveal d2">
         <div class="ig-track" id="igTrack"></div>
       </div>
@@ -676,7 +681,7 @@
   </section>
 
   <!-- ===== CONTACT FORM ===== -->
-  <section class="block">
+  <section class="block" id="contact">
     <div class="wrap">
       <div class="contact-card reveal d1">
         <div class="contact-left">
