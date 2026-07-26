@@ -124,6 +124,8 @@
 
   /* ---------------- About section (2-column layout) ---------------- */
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+  .about-left, .about-right { min-width: 0; }
+  .stats-grid > * { min-width: 0; }
   @media (max-width: 940px) { .about-grid { grid-template-columns: 1fr; gap: 56px; } }
   .about-left .eyebrow { margin-bottom: 30px; }
   .about-h { font-family: var(--sans); font-weight: 800; font-size: clamp(42px, 6vw, 80px); line-height: 0.96; letter-spacing: -0.02em; text-transform: uppercase; }
@@ -148,7 +150,7 @@
   .platform-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
   .platform-row .pill { border: 1px solid rgba(255,255,255,0.12); background: #0b0b0d; border-radius: 12px; padding: 13px 20px; font-size: 15px; font-weight: 500; }
   /* sliding country flags */
-  .flag-marquee { margin-top: 28px; display: flex; flex-direction: column; gap: 18px; overflow: hidden;
+  .flag-marquee { margin-top: 28px; display: flex; flex-direction: column; gap: 18px; overflow: hidden; min-width: 0; max-width: 100%;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
   .flag-track { display: flex; gap: 18px; width: max-content; will-change: transform; }
@@ -190,7 +192,8 @@
   .ig-slide { flex: 0 0 100%; display: grid; grid-template-columns: 300px minmax(0,440px); gap: 60px; align-items: center; justify-content: center; padding: 12px; }
   @media (max-width: 860px){ .ig-slide { grid-template-columns: 1fr; justify-items: center; gap: 36px; } }
   .phone { width: 300px; background: #0a0a0a; border-radius: 46px; padding: 9px; border: 2px solid #20242f; box-shadow: 0 30px 90px rgba(0,0,0,.7), 0 0 0 6px rgba(255,255,255,0.02); }
-  .phone-screen { background:#000; border-radius:38px; overflow:hidden; height:580px; padding:12px 14px; text-align:left; }
+  .phone-screen { position:relative; background:#000; border-radius:38px; overflow:hidden; height:580px; padding:12px 14px; text-align:left; }
+  .pshot { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; z-index:30; }
   .ig-status { display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; padding:4px 6px 12px; }
   .ig-status .r { font-size:13px; letter-spacing:1px; }
   .ig-head { display:flex; align-items:center; gap:10px; padding:2px 4px 14px; }
@@ -737,6 +740,7 @@
       const pri = p.btn === 'Follow' ? 'pri' : '';
       const badge = p.verified ? '<span class="vb">✓</span>' : '';
       return '<div class="ig-slide"><div class="phone"><div class="phone-screen">'
+        + '<img class="pshot" src="assets/'+p.user.replace(/\./g,'-')+'.jpg" alt="'+p.user+' profile" onerror="this.remove()">'
         + '<div class="ig-status"><span>2:06</span><span class="r">📶 🔋</span></div>'
         + '<div class="ig-head"><span class="ig-back">‹</span><span class="ig-user">'+p.user+badge+'</span><span class="ig-dots">⋯</span></div>'
         + '<div class="ig-top"><div class="ig-ava" style="background:'+p.avBg+';color:'+p.avColor+'">'+p.avatar+'</div>'
