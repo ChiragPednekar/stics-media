@@ -94,7 +94,10 @@
     transform: translateY(-110%); opacity: 0; pointer-events: none;
   }
   header.nav.nav-shown { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  header.nav.scrolled { background: rgba(0,0,0,0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
+  header.nav.scrolled { background: rgba(0,0,0,0.6); border-bottom: 1px solid var(--line); }
+  /* Blur only once the nav is actually visible — compositing a full-width blur
+     while it's hidden (the whole intro) is a big scroll cost on mobile GPUs. */
+  header.nav.nav-shown.scrolled { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
   .logo { font-family: var(--serif); font-size: 27px; letter-spacing: 0; }
   .nav-right { display: flex; align-items: center; gap: 28px; font-size: 15px; }
@@ -113,9 +116,9 @@
   @media (max-width: 720px) { .nav-right a.link { display: none; } }
 
   /* ---------------- Intro scroll sequence ---------------- */
-  .intro { position: relative; height: 360vh; background: #000; }
+  .intro { position: relative; height: 360vh; height: 360svh; background: #000; }
   .intro-sticky {
-    position: sticky; top: 0; height: 100vh;
+    position: sticky; top: 0; height: 100vh; height: 100svh;
     display: flex; align-items: center; justify-content: center;
     text-align: center; padding: 0 24px; overflow: hidden;
   }
@@ -903,7 +906,16 @@
     rafId = requestAnimationFrame(paint);
   }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', function(){ measure(); lastProg = -1; onScroll(); });
+  // On mobile, hiding/showing the address bar fires resize on almost every
+  // scroll. Re-measuring there forces a layout read mid-scroll and stutters the
+  // intro, so only re-measure on a real viewport change (width, or a big height
+  // jump like an orientation change) — not address-bar drift.
+  let lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', function(){
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return;
+    lastW = innerWidth; lastH = innerHeight;
+    measure(); lastProg = -1; onScroll();
+  });
   measure(); paint();
 
   /* ---- Sliding country flags ---- */
