@@ -211,6 +211,11 @@
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
   .flag-track { display: flex; gap: 18px; width: max-content; will-change: transform; }
+  /* Offscreen marquees keep their (very wide) compositor layers alive and keep
+     animating, which iOS Safari cannot absorb the way Chrome/Android can — it
+     throttles the whole page, including the intro scroll. Pause them and drop
+     will-change so the layer is released while they're out of view. */
+  .anim-idle, .anim-idle .flag-track, .anim-idle .brand-track { animation-play-state: paused !important; will-change: auto !important; }
   .flag-track.left { animation: flagLeft 30s linear infinite; }
   .flag-track.right { animation: flagRight 30s linear infinite; }
   .flag-marquee:hover .flag-track { animation-play-state: paused; }
@@ -1074,6 +1079,24 @@
         entries[0].isIntersecting ? start() : stop();
       }, { threshold: 0.15 }).observe(track.parentElement);
     }
+  })();
+
+  /* ---- Pause offscreen marquees ----
+     The flag and brand strips animate forever on very wide, permanently
+     promoted layers (and the flag strip is masked, which forces offscreen
+     compositing). iOS Safari has far tighter GPU limits than Chrome/Android,
+     so leaving all of them running while the visitor is still in the intro was
+     enough to stutter the whole page. Idle them until they're actually near
+     the viewport. */
+  (function(){
+    const strips = [document.querySelector('.brand-strip'), document.getElementById('flagMarquee')].filter(Boolean);
+    if (!strips.length) return;
+    if (!('IntersectionObserver' in window)) return; // leave them running
+    strips.forEach(el => el.classList.add('anim-idle'));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => e.target.classList.toggle('anim-idle', !e.isIntersecting));
+    }, { rootMargin: '200px 0px' }); // wake just before they scroll into view
+    strips.forEach(el => io.observe(el));
   })();
 
   /* ---- Enquiry form -> Google Sheet ---- */
